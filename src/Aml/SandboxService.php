@@ -6,9 +6,9 @@ namespace Yoti\Sandbox\Aml;
 
 use Psr\Http\Message\ResponseInterface;
 use Yoti\Constants;
-use Yoti\Sandbox\Exception\SandboxAmlException;
 use Yoti\Http\Payload;
 use Yoti\Http\RequestBuilder;
+use Yoti\Sandbox\Exception\SandboxAmlException;
 use Yoti\Util\Config;
 use Yoti\Util\Json;
 use Yoti\Util\PemFile;

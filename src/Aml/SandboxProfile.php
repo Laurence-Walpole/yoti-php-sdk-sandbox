@@ -38,7 +38,7 @@ class SandboxProfile implements \JsonSerializable
     /**
      * Full address.
      *
-     * @var \Yoti\Sandbox\Aml\Address
+     * @var \Yoti\Sandbox\Aml\SandboxAddress
      */
     private $amlAddress;
 
@@ -47,7 +47,7 @@ class SandboxProfile implements \JsonSerializable
      *
      * @param string $givenNames
      * @param string $familyName
-     * @param \Yoti\Aml\Address $amlAddress
+     * @param \Yoti\Sandbox\Aml\SandboxAddress $amlAddress
      * @param null|string $ssn
      */
     public function __construct($givenNames, $familyName, SandboxAddress $amlAddress, string $ssn = null)

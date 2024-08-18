@@ -124,7 +124,8 @@ class SandboxResult
 
         // Throw an error if any expected attribute is missing.
         if (count($missingAttr) > 0) {
-            throw new SandboxAmlException('Missing attributes from the result: ' . implode(',', $missingAttr), $response);
+            throw new SandboxAmlException('Missing attributes from the result: '
+                . implode(',', $missingAttr), $response);
         }
     }
 

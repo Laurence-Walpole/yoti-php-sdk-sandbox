@@ -9,13 +9,13 @@
   "homepage": "https://yoti.com",
   "license": "MIT",
   "require": {
-    "php": "^7.1 || ^8.0 || ^8.1",
+    "php": "^7.4 || ^8.0 || ^8.1",
     "yoti/yoti-php-sdk": "^4.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.5 || ^8.5 || ^9.3",
     "squizlabs/php_codesniffer": "^3.4",
-    "friendsofphp/php-cs-fixer": "^3.4",
+    "friendsofphp/php-cs-fixer": "3.62.0",
     "brainmaestro/composer-git-hooks": "^2.8",
     "phpstan/phpstan-strict-rules": "^0.12.1",
     "phpstan/extension-installer": "^1.0",
