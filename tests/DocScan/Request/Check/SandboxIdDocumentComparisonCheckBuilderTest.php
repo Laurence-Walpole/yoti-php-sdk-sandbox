@@ -1,137 +1,63 @@
 <?php
 
-declare(strict_types=1);
+namespace Yoti\Test\DocScan\Session\Create\Check;
 
-namespace Yoti\Sandbox\Test\DocScan\Request\Check;
-
-use PHPUnit\Framework\MockObject\MockObject;
-use Yoti\Sandbox\DocScan\Request\Check\Report\SandboxBreakdown;
-use Yoti\Sandbox\DocScan\Request\Check\Report\SandboxRecommendation;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheckBuilder;
-use Yoti\Sandbox\DocScan\Request\SandboxDocumentFilter;
 use Yoti\Sandbox\Test\TestCase;
 
+/**
+ * @coversDefaultClass \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheckBuilder
+ */
 class SandboxIdDocumentComparisonCheckBuilderTest extends TestCase
 {
-    /**
-     * @var MockObject|SandboxRecommendation
-     */
-    private $recommendationMock;
-
-    /**
-     * @var MockObject|SandboxBreakdown
-     */
-    private $breakdownMock;
-
-    /**
-     * @before
-     */
-    public function setUp(): void
-    {
-        $this->recommendationMock = $this->createMock(SandboxRecommendation::class);
-        $this->breakdownMock = $this->createMock(SandboxBreakdown::class);
-    }
+    private const ID_DOCUMENT_COMPARISON = 'ID_DOCUMENT_COMPARISON';
 
     /**
      * @test
+     * @covers ::build
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck::getConfig
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck::getType
      */
-    public function shouldThrowExceptionWhenMissingRecommendation(): void
-    {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage(SandboxRecommendation::class);
-
-        (new SandboxIdDocumentComparisonCheckBuilder())->build();
-    }
-
-    /**
-     * @test
-     */
-    public function shouldBuildCorrectly(): void
+    public function shouldCreateSandboxIdDocumentComparisonCheckCorrectly()
     {
         $result = (new SandboxIdDocumentComparisonCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withBreakdown($this->breakdownMock)
             ->build();
 
         $this->assertInstanceOf(SandboxIdDocumentComparisonCheck::class, $result);
-
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [
-                            $this->breakdownMock
-                        ],
-                    ],
-                ],
-            ]),
-            json_encode($result)
-        );
     }
 
     /**
      * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck::jsonSerialize
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck::getType
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck::getConfig
      */
-    public function shouldAllowOverwritingOfBreakdowns(): void
+    public function shouldJsonEncodeCorrectly()
     {
-        $breakdowns = [
-            $this->breakdownMock,
-            $this->breakdownMock,
-            $this->breakdownMock
+        $result = (new SandboxIdDocumentComparisonCheckBuilder())
+            ->build();
+
+        $expected = [
+            'type' => self::ID_DOCUMENT_COMPARISON,
         ];
 
-        $result = (new SandboxIdDocumentComparisonCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withBreakdowns($breakdowns)
-            ->build();
-
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [
-                            $this->breakdownMock,
-                            $this->breakdownMock,
-                            $this->breakdownMock,
-                        ],
-                    ],
-                ],
-            ]),
-            json_encode($result)
-        );
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($result));
     }
 
     /**
      * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck::__toString
      */
-    public function shouldBuildWithDocumentFilter(): void
+    public function shouldCreateCorrectString()
     {
-        $documentFilter = $this->createMock(SandboxDocumentFilter::class);
-        $documentFilter
-            ->method('jsonSerialize')
-            ->willReturn((object) ['some' => 'filter']);
-
         $result = (new SandboxIdDocumentComparisonCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withSecondaryDocumentFilter($documentFilter)
             ->build();
 
-        $this->assertInstanceOf(SandboxIdDocumentComparisonCheck::class, $result);
+        $expected = [
+            'type' => self::ID_DOCUMENT_COMPARISON,
+        ];
 
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [],
-                    ],
-                ],
-                'secondary_document_filter' => $documentFilter
-            ]),
-            json_encode($result)
-        );
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), $result->__toString());
     }
 }

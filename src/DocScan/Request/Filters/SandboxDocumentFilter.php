@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yoti\Sandbox\DocScan\Filters;
+namespace Yoti\Sandbox\DocScan\Request\Filters;
 
 abstract class SandboxDocumentFilter implements \JsonSerializable
 {

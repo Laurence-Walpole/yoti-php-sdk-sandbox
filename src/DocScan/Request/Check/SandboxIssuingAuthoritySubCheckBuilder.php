@@ -1,10 +1,10 @@
 <?php
 
-namespace Yoti\DocScan\Session\Create\Check;
+namespace Yoti\Sandbox\DocScan\Request\Check;
 
-use Yoti\DocScan\Session\Create\Filters\DocumentFilter;
+use Yoti\Sandbox\DocScan\Request\Filters\SandboxDocumentFilter;
 
-class IssuingAuthoritySubCheckBuilder
+class SandboxIssuingAuthoritySubCheckBuilder
 {
     /**
      * @var bool
@@ -12,10 +12,10 @@ class IssuingAuthoritySubCheckBuilder
     private $requested;
 
     /**
-     * Returns the {@link DocumentFilter} that will drive which
+     * Returns the {@link SandboxDocumentFilter} that will drive which
      * documents the sub check is performed on
      *
-     * @var DocumentFilter
+     * @var SandboxDocumentFilter
      */
     private $filter;
 
@@ -23,7 +23,7 @@ class IssuingAuthoritySubCheckBuilder
      * @param bool $requested
      * @return $this
      */
-    public function withRequested(bool $requested): IssuingAuthoritySubCheckBuilder
+    public function withRequested(bool $requested): SandboxIssuingAuthoritySubCheckBuilder
     {
         $this->requested = $requested;
 
@@ -31,10 +31,10 @@ class IssuingAuthoritySubCheckBuilder
     }
 
     /**
-     * @param DocumentFilter $filter
+     * @param SandboxDocumentFilter $filter
      * @return $this
      */
-    public function withDocumentFilter(DocumentFilter $filter): IssuingAuthoritySubCheckBuilder
+    public function withDocumentFilter(SandboxDocumentFilter $filter): SandboxIssuingAuthoritySubCheckBuilder
     {
         $this->filter = $filter;
 
@@ -42,10 +42,10 @@ class IssuingAuthoritySubCheckBuilder
     }
 
     /**
-     * @return IssuingAuthoritySubCheck
+     * @return SandboxIssuingAuthoritySubCheck
      */
-    public function build(): IssuingAuthoritySubCheck
+    public function build(): SandboxIssuingAuthoritySubCheck
     {
-        return new IssuingAuthoritySubCheck($this->requested, $this->filter);
+        return new SandboxIssuingAuthoritySubCheck($this->requested, $this->filter);
     }
 }

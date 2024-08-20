@@ -3,9 +3,9 @@
 namespace Yoti\Sandbox\Test\DocScan\Request\Check;
 
 use PHPUnit\Framework\Assert;
-use Yoti\Sandbox\DocScan\SandboxConstants;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxWatchlistScreeningConfig;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxWatchlistScreeningConfigBuilder;
+use Yoti\Sandbox\DocScan\SandboxConstants;
 use Yoti\Sandbox\Test\TestCase;
 
 /**

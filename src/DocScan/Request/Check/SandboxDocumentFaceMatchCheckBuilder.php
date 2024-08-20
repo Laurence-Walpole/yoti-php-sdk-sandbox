@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Yoti\Sandbox\DocScan\Request\Check;
 
-class SandboxDocumentFaceMatchCheckBuilder extends SandboxDocumentCheckBuilder
+use Yoti\Sandbox\DocScan\Request\Traits\Builder\SandboxManualCheckTrait;
+use Yoti\Util\Validation;
+
+class SandboxDocumentFaceMatchCheckBuilder
 {
-    /**
-     * @return SandboxDocumentFaceMatchCheck
-     */
-    public function build(): SandboxCheck
+    use SandboxManualCheckTrait;
+
+    public function build(): SandboxDocumentFaceMatchCheck
     {
-        $result = new SandboxCheckResult($this->buildReport());
-        return new SandboxDocumentFaceMatchCheck($result, $this->documentFilter);
+        Validation::notEmptyString($this->manualCheck, 'manualCheck');
+
+        $config = new SandboxDocumentFaceMatchCheckConfig($this->manualCheck);
+        return new SandboxDocumentFaceMatchCheck($config);
     }
 }

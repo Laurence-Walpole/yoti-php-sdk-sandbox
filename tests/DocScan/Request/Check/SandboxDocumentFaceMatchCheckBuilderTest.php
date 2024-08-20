@@ -1,104 +1,106 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Yoti\Sandbox\Test\DocScan\Request\Check;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use Yoti\Sandbox\DocScan\Request\Check\Report\SandboxBreakdown;
-use Yoti\Sandbox\DocScan\Request\Check\Report\SandboxRecommendation;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheckBuilder;
-use Yoti\Sandbox\DocScan\Request\SandboxDocumentFilter;
 use Yoti\Sandbox\Test\TestCase;
 
+/**
+ * @coversDefaultClass \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheckBuilder
+ */
 class SandboxDocumentFaceMatchCheckBuilderTest extends TestCase
 {
     /**
-     * @var MockObject|SandboxRecommendation
-     */
-    private $recommendationMock;
-
-    /**
-     * @var MockObject|SandboxBreakdown
-     */
-    private $breakdownMock;
-
-    /**
-     * @before
-     */
-    public function setUp(): void
-    {
-        $this->recommendationMock = $this->createMock(SandboxRecommendation::class);
-        $this->breakdownMock = $this->createMock(SandboxBreakdown::class);
-    }
-
-    /**
      * @test
+     * @covers ::withManualCheckAlways
+     * @covers ::setManualCheck
+     * @covers ::build
      */
-    public function shouldThrowExceptionWhenMissingRecommendation(): void
-    {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage(SandboxRecommendation::class);
-
-        (new SandboxDocumentFaceMatchCheckBuilder())->build();
-    }
-
-    /**
-     * @test
-     */
-    public function shouldBuildCorrectly(): void
+    public function shouldCorrectlyBuildSandboxDocumentFaceMatchCheck()
     {
         $result = (new SandboxDocumentFaceMatchCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withBreakdown($this->breakdownMock)
+            ->withManualCheckAlways()
             ->build();
 
         $this->assertInstanceOf(SandboxDocumentFaceMatchCheck::class, $result);
-
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [
-                            $this->breakdownMock,
-                        ],
-                    ],
-                ],
-            ]),
-            json_encode($result)
-        );
     }
 
     /**
      * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::jsonSerialize
+     * @covers ::withManualCheckAlways
+     * @covers ::setManualCheck
+     * @covers ::build
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::__construct
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::getConfig
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::getType
      */
-    public function shouldBuildWithDocumentFilter(): void
+    public function shouldReturnTheCorrectValuesWhenManualCheckIsAlways()
     {
-        $documentFilter = $this->createMock(SandboxDocumentFilter::class);
-        $documentFilter
-            ->method('jsonSerialize')
-            ->willReturn((object) ['some' => 'filter']);
-
         $result = (new SandboxDocumentFaceMatchCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withDocumentFilter($documentFilter)
+            ->withManualCheckAlways()
             ->build();
 
-        $this->assertInstanceOf(SandboxDocumentFaceMatchCheck::class, $result);
+        $expected = [
+            'type' => 'ID_DOCUMENT_FACE_MATCH',
+            'config' => [
+                'manual_check' => 'ALWAYS',
+            ],
+        ];
 
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [],
-                    ],
-                ],
-                'document_filter' => $documentFilter
-            ]),
-            json_encode($result)
-        );
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($result));
+    }
+
+    /**
+     * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::jsonSerialize
+     * @covers ::withManualCheckFallback
+     * @covers ::setManualCheck
+     * @covers ::build
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::__construct
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::getConfig
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::getType
+     */
+    public function shouldReturnTheCorrectValuesWhenManualCheckIsFallback()
+    {
+        $result = (new SandboxDocumentFaceMatchCheckBuilder())
+            ->withManualCheckFallback()
+            ->build();
+
+        $expected = [
+            'type' => 'ID_DOCUMENT_FACE_MATCH',
+            'config' => [
+                'manual_check' => 'FALLBACK',
+            ],
+        ];
+
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($result));
+    }
+
+    /**
+     * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::jsonSerialize
+     * @covers ::withManualCheckNever
+     * @covers ::setManualCheck
+     * @covers ::build
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::__construct
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::getConfig
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck::getType
+     */
+    public function shouldReturnTheCorrectValuesWhenManualCheckIsNever()
+    {
+        $result = (new SandboxDocumentFaceMatchCheckBuilder())
+            ->withManualCheckNever()
+            ->build();
+
+        $expected = [
+            'type' => 'ID_DOCUMENT_FACE_MATCH',
+            'config' => [
+                'manual_check' => 'NEVER',
+            ],
+        ];
+
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($result));
     }
 }

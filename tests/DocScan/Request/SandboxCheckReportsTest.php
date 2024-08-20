@@ -9,7 +9,6 @@ use Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentFaceMatchCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxDocumentTextDataCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxIdDocumentComparisonCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxLivenessCheck;
-use Yoti\Sandbox\DocScan\Request\Check\SandboxSupplementaryDocumentTextDataCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck;
 use Yoti\Sandbox\DocScan\Request\SandboxCheckReports;
 use Yoti\Sandbox\DocScan\Request\SandboxCheckReportsBuilder;
@@ -18,6 +17,7 @@ use Yoti\Sandbox\Test\TestCase;
 /**
  * @coversDefaultClass \Yoti\Sandbox\DocScan\Request\SandboxCheckReportsBuilder
  */
+
 class SandboxCheckReportsTest extends TestCase
 {
     private const SOME_ASYNC_REPORT_DELAY = 30;
@@ -52,18 +52,8 @@ class SandboxCheckReportsTest extends TestCase
      */
     private $thirdPartyIdentityCheckMock;
 
-    /**
-     * @var SandboxSupplementaryDocumentTextDataCheck
-     */
-    private $supplementaryDocumentTextDataCheckMock;
-
     public function setup(): void
     {
-        $this->documentTextDataCheckMock = $this->createMock(SandboxDocumentTextDataCheck::class);
-        $this->documentTextDataCheckMock
-            ->method('jsonSerialize')
-            ->willReturn((object) [ 'type' => 'documentTextDataCheck' ]);
-
         $this->documentAuthenticityCheckMock = $this->createMock(SandboxDocumentAuthenticityCheck::class);
         $this->documentAuthenticityCheckMock
             ->method('jsonSerialize')
@@ -88,24 +78,15 @@ class SandboxCheckReportsTest extends TestCase
         $this->thirdPartyIdentityCheckMock
             ->method('jsonSerialize')
             ->willReturn((object) [ 'type' => 'thirdPartyIdentityCheck' ]);
-
-        $this->supplementaryDocumentTextDataCheckMock = $this->createMock(
-            SandboxSupplementaryDocumentTextDataCheck::class
-        );
-        $this->supplementaryDocumentTextDataCheckMock
-            ->method('jsonSerialize')
-            ->willReturn((object) [ 'type' => 'supplementaryDocumentTextDataCheckMock' ]);
     }
 
     /**
      * @test
-     * @covers ::withDocumentTextDataCheck
      * @covers ::withDocumentAuthenticityCheck
      * @covers ::withIdDocumentComparisonCheck
      * @covers ::withDocumentFaceMatchCheck
      * @covers ::withLivenessCheck
      * @covers ::withAsyncReportDelay
-     * @covers ::withSupplementaryDocumentTextDataCheck
      * @covers ::build
      * @covers \Yoti\Sandbox\DocScan\Request\SandboxCheckReports::__construct
      * @covers \Yoti\Sandbox\DocScan\Request\SandboxCheckReports::jsonSerialize
@@ -113,24 +94,20 @@ class SandboxCheckReportsTest extends TestCase
     public function shouldBuildCorrectly()
     {
         $result = (new SandboxCheckReportsBuilder())
-            ->withDocumentTextDataCheck($this->documentTextDataCheckMock)
             ->withDocumentAuthenticityCheck($this->documentAuthenticityCheckMock)
             ->withIdDocumentComparisonCheck($this->idDocumentComparisonCheckMock)
             ->withLivenessCheck($this->livenessCheckMock)
             ->withDocumentFaceMatchCheck($this->documentFaceMatchCheckMock)
             ->withAsyncReportDelay(self::SOME_ASYNC_REPORT_DELAY)
-            ->withSupplementaryDocumentTextDataCheck($this->supplementaryDocumentTextDataCheckMock)
             ->withThirdPartyIdentityCheck($this->thirdPartyIdentityCheckMock)
             ->build();
 
         $this->assertJsonStringEqualsJsonString(
             json_encode([
-                'ID_DOCUMENT_TEXT_DATA_CHECK' => [$this->documentTextDataCheckMock],
                 'ID_DOCUMENT_AUTHENTICITY' => [$this->documentAuthenticityCheckMock],
                 'ID_DOCUMENT_COMPARISON' => [$this->idDocumentComparisonCheckMock],
                 'ID_DOCUMENT_FACE_MATCH' => [$this->documentFaceMatchCheckMock],
                 'LIVENESS' => [$this->livenessCheckMock],
-                'SUPPLEMENTARY_DOCUMENT_TEXT_DATA_CHECK' => [$this->supplementaryDocumentTextDataCheckMock],
                 'THIRD_PARTY_IDENTITY' => $this->thirdPartyIdentityCheckMock,
                 'async_report_delay' => self::SOME_ASYNC_REPORT_DELAY
             ]),
@@ -146,7 +123,6 @@ class SandboxCheckReportsTest extends TestCase
     public function shouldConstructWithoutOptionalArguments()
     {
         $checkReports = new SandboxCheckReports(
-            [$this->documentTextDataCheckMock],
             [$this->documentAuthenticityCheckMock],
             [$this->documentFaceMatchCheckMock],
             [$this->livenessCheckMock],
@@ -155,7 +131,6 @@ class SandboxCheckReportsTest extends TestCase
 
         $this->assertJsonStringEqualsJsonString(
             json_encode([
-                'ID_DOCUMENT_TEXT_DATA_CHECK' => [$this->documentTextDataCheckMock],
                 'ID_DOCUMENT_AUTHENTICITY' => [$this->documentAuthenticityCheckMock],
                 'ID_DOCUMENT_FACE_MATCH' => [$this->documentFaceMatchCheckMock],
                 'LIVENESS' => [$this->livenessCheckMock],

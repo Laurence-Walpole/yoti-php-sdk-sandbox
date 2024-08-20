@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Yoti\Sandbox\DocScan\Request\Check;
 
-class SandboxThirdPartyIdentityCheckBuilder extends SandboxDocumentCheckBuilder
+class SandboxThirdPartyIdentityCheckBuilder
 {
-    /**
-     * @return SandboxThirdPartyIdentityCheck
-     */
-    public function build(): SandboxCheck
+    public function build(): SandboxThirdPartyIdentityCheck
     {
-        $result = new SandboxCheckResult($this->buildReport());
-        return new SandboxThirdPartyIdentityCheck($result, $this->documentFilter);
+        return new SandboxThirdPartyIdentityCheck();
     }
 }

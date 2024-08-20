@@ -1,105 +1,63 @@
 <?php
 
-declare(strict_types=1);
+namespace Yoti\Test\DocScan\Session\Create\Check;
 
-namespace Yoti\Sandbox\Test\DocScan\Request\Check;
-
-use PHPUnit\Framework\MockObject\MockObject;
-use Yoti\Sandbox\DocScan\Request\Check\Report\SandboxBreakdown;
-use Yoti\Sandbox\DocScan\Request\Check\Report\SandboxRecommendation;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck;
 use Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheckBuilder;
 use Yoti\Sandbox\Test\TestCase;
 
+/**
+ * @coversDefaultClass \Yoti\Sandbox\DocScan\Request\Check\RequestedThirdPartyIdentityCheckBuilder
+ */
 class SandboxThirdPartyIdentityCheckBuilderTest extends TestCase
 {
-    /**
-     * @var MockObject|SandboxRecommendation
-     */
-    private $recommendationMock;
-
-    /**
-     * @var MockObject|SandboxBreakdown
-     */
-    private $breakdownMock;
-
-    /**
-     * @before
-     */
-    public function setUp(): void
-    {
-        $this->recommendationMock = $this->createMock(SandboxRecommendation::class);
-        $this->breakdownMock = $this->createMock(SandboxBreakdown::class);
-    }
+    private const THIRD_PARTY_IDENTITY = 'THIRD_PARTY_IDENTITY';
 
     /**
      * @test
+     * @covers ::build
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck::getConfig
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck::getType
      */
-    public function shouldThrowExceptionWhenMissingRecommendation(): void
-    {
-        $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage(SandboxRecommendation::class);
-
-        (new SandboxThirdPartyIdentityCheckBuilder())->build();
-    }
-
-    /**
-     * @test
-     */
-    public function shouldBuildCorrectly(): void
+    public function shouldCreateSandboxThirdPartyIdentityCheckCorrectly()
     {
         $result = (new SandboxThirdPartyIdentityCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withBreakdown($this->breakdownMock)
             ->build();
 
         $this->assertInstanceOf(SandboxThirdPartyIdentityCheck::class, $result);
-
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [
-                            $this->breakdownMock
-                        ],
-                    ],
-                ],
-            ]),
-            json_encode($result)
-        );
     }
 
     /**
      * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck::jsonSerialize
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck::getType
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck::getConfig
      */
-    public function shouldAllowOverwritingOfBreakdowns(): void
+    public function shouldJsonEncodeCorrectly()
     {
-        $breakdowns = [
-            $this->breakdownMock,
-            $this->breakdownMock,
-            $this->breakdownMock
-        ];
-
         $result = (new SandboxThirdPartyIdentityCheckBuilder())
-            ->withRecommendation($this->recommendationMock)
-            ->withBreakdowns($breakdowns)
             ->build();
 
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'result' => [
-                    'report' => [
-                        'recommendation' => $this->recommendationMock,
-                        'breakdown' => [
-                            $this->breakdownMock,
-                            $this->breakdownMock,
-                            $this->breakdownMock,
-                        ],
-                    ],
-                ],
-            ]),
-            json_encode($result)
-        );
+        $expected = [
+            'type' => self::THIRD_PARTY_IDENTITY,
+        ];
+
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($result));
+    }
+
+    /**
+     * @test
+     * @covers \Yoti\Sandbox\DocScan\Request\Check\SandboxThirdPartyIdentityCheck::__toString
+     */
+    public function shouldCreateCorrectString()
+    {
+        $result = (new SandboxThirdPartyIdentityCheckBuilder())
+            ->build();
+
+        $expected = [
+            'type' => self::THIRD_PARTY_IDENTITY,
+        ];
+
+        $this->assertJsonStringEqualsJsonString(json_encode($expected), $result->__toString());
     }
 }

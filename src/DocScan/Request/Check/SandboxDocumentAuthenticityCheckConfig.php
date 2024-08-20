@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yoti\DocScan\Session\Create\Check;
+namespace Yoti\Sandbox\DocScan\Request\Check;
 
 use stdClass;
 use Yoti\Util\Json;
 
-class RequestedDocumentAuthenticityCheckConfig implements RequestedCheckConfigInterface
+class SandboxDocumentAuthenticityCheckConfig implements SandboxCheckConfigInterface
 {
     /**
      * @var string|null
@@ -15,15 +15,15 @@ class RequestedDocumentAuthenticityCheckConfig implements RequestedCheckConfigIn
     private $manualCheck;
 
     /**
-     * @var IssuingAuthoritySubCheck|null
+     * @var SandboxIssuingAuthoritySubCheck|null
      */
     private $issuingAuthoritySubCheck;
 
     /**
      * @param string|null $manualCheck
-     * @param IssuingAuthoritySubCheck|null $issuingAuthoritySubCheck
+     * @param SandboxIssuingAuthoritySubCheck|null $issuingAuthoritySubCheck
      */
-    public function __construct(?string $manualCheck, ?IssuingAuthoritySubCheck $issuingAuthoritySubCheck = null)
+    public function __construct(?string $manualCheck, ?SandboxIssuingAuthoritySubCheck $issuingAuthoritySubCheck = null)
     {
         $this->manualCheck = $manualCheck;
         $this->issuingAuthoritySubCheck = $issuingAuthoritySubCheck;
@@ -49,9 +49,9 @@ class RequestedDocumentAuthenticityCheckConfig implements RequestedCheckConfigIn
     }
 
     /**
-     * @return IssuingAuthoritySubCheck|null
+     * @return SandboxIssuingAuthoritySubCheck|null
      */
-    public function getIssuingAuthoritySubCheck(): ?IssuingAuthoritySubCheck
+    public function getIssuingAuthoritySubCheck(): ?SandboxIssuingAuthoritySubCheck
     {
         return $this->issuingAuthoritySubCheck;
     }

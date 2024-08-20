@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Yoti\Sandbox\DocScan\Request\Check;
 
 use stdClass;
-use Yoti\DocScan\Session\Create\Check\RequestedCheckConfigInterface;
 
-class SandboxFaceMatchCheckConfig implements RequestedCheckConfigInterface
+class SandboxDocumentFaceMatchCheckConfig implements SandboxCheckConfigInterface
 {
     /**
      * @var string

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yoti\DocScan\Session\Create\Check;
+namespace Yoti\Sandbox\DocScan\Request\Check;
 
-use Yoti\DocScan\Constants;
+use Yoti\Sandbox\DocScan\SandboxConstants;
 use Yoti\Util\Validation;
 
-class RequestedLivenessCheckBuilder
+class SandboxLivenessCheckBuilder
 {
     private const ZOOM = 'ZOOM';
     private const STATIC = 'STATIC';
@@ -51,7 +51,7 @@ class RequestedLivenessCheckBuilder
 
     public function withoutManualCheck(): self
     {
-        return $this->withManualCheck(Constants::NEVER);
+        return $this->withManualCheck(SandboxConstants::NEVER);
     }
 
     private function withManualCheck(string $manualCheck): self
@@ -60,12 +60,12 @@ class RequestedLivenessCheckBuilder
         return $this;
     }
 
-    public function build(): RequestedLivenessCheck
+    public function build(): SandboxLivenessCheck
     {
         Validation::notEmptyString($this->livenessType, 'livenessType');
         Validation::notNull($this->maxRetries, 'maxRetries');
 
-        $config = new RequestedLivenessConfig($this->livenessType, $this->maxRetries, $this->manualCheck);
-        return new RequestedLivenessCheck($config);
+        $config = new SandboxLivenessConfig($this->livenessType, $this->maxRetries, $this->manualCheck);
+        return new SandboxLivenessCheck($config);
     }
 }

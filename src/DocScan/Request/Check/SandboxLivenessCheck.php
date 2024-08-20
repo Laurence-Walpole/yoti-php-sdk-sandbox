@@ -4,31 +4,37 @@ declare(strict_types=1);
 
 namespace Yoti\Sandbox\DocScan\Request\Check;
 
+use Yoti\DocScan\Constants;
+
 class SandboxLivenessCheck extends SandboxCheck
 {
     /**
-     * @var string
+     * @var SandboxLivenessConfig
      */
-    private $livenessType;
+    private $config;
 
     /**
-     * @param SandboxCheckResult $result
-     * @param string $livenessType
+     * SandboxLivenessCheck constructor.
+     * @param SandboxLivenessConfig $config
      */
-    public function __construct(SandboxCheckResult $result, string $livenessType)
+    public function __construct(SandboxLivenessConfig $config)
     {
-        parent::__construct($result);
-
-        $this->livenessType = $livenessType;
+        $this->config = $config;
     }
 
     /**
-     * @return \stdClass
+     * @inheritDoc
      */
-    public function jsonSerialize(): \stdClass
+    protected function getType(): string
     {
-        $jsonData = parent::jsonSerialize();
-        $jsonData->liveness_type = $this->livenessType;
-        return $jsonData;
+        return Constants::LIVENESS;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getConfig(): ?SandboxCheckConfigInterface
+    {
+        return $this->config;
     }
 }

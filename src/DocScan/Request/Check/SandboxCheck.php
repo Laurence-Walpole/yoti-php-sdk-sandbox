@@ -4,28 +4,38 @@ declare(strict_types=1);
 
 namespace Yoti\Sandbox\DocScan\Request\Check;
 
-class SandboxCheck implements \JsonSerializable
+use JsonSerializable;
+use stdClass;
+use Yoti\Util\Json;
+
+abstract class SandboxCheck implements JsonSerializable
 {
     /**
-     * @var SandboxCheckResult
+     * @return stdClass
      */
-    private $result;
-
-    /**
-     * @param SandboxCheckResult $result
-     */
-    public function __construct(SandboxCheckResult $result)
+    public function jsonSerialize(): stdClass
     {
-        $this->result = $result;
+        return (object) Json::withoutNullValues([
+            'type' => $this->getType(),
+            'config' => $this->getConfig()
+        ]);
     }
 
     /**
-     * @return \stdClass
+     * @return string
      */
-    public function jsonSerialize(): \stdClass
+    abstract protected function getType(): string;
+
+    /**
+     * @return SandboxCheckConfigInterface|null
+     */
+    abstract protected function getConfig(): ?SandboxCheckConfigInterface;
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
-        return (object) [
-            'result' => $this->result,
-        ];
+        return Json::encode($this);
     }
 }

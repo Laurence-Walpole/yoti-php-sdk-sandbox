@@ -1,14 +1,14 @@
 <?php
 
-namespace Yoti\Test\DocScan\Session\Create\Check;
+namespace Yoti\Sandbox\Test\DocScan\Request\Check;
 
-use Yoti\DocScan\Session\Create\Check\RequestedLivenessConfig;
-use Yoti\Test\TestCase;
+use Yoti\Sandbox\DocScan\Request\Check\SandboxLivenessConfig;
+use Yoti\Sandbox\Test\TestCase;
 
 /**
- * @coversDefaultClass \Yoti\DocScan\Session\Create\Check\RequestedLivenessConfig
+ * @coversDefaultClass \Yoti\Sandbox\DocScan\Request\Check\SandboxLivenessConfig
  */
-class RequestedLivenessCheckConfigTest extends TestCase
+class SandboxLivenessCheckConfigTest extends TestCase
 {
     private const SOME_LIVENESS_TYPE = 'someLivenessType';
     private const SOME_MAX_RETRIES = 5;
@@ -23,7 +23,7 @@ class RequestedLivenessCheckConfigTest extends TestCase
      */
     public function shouldHoldValuesCorrectly()
     {
-        $result = new RequestedLivenessConfig(self::SOME_LIVENESS_TYPE, self::SOME_MAX_RETRIES, self::NEVER);
+        $result = new SandboxLivenessConfig(self::SOME_LIVENESS_TYPE, self::SOME_MAX_RETRIES, self::NEVER);
 
         $this->assertEquals(self::SOME_LIVENESS_TYPE, $result->getLivenessType());
         $this->assertEquals(self::SOME_MAX_RETRIES, $result->getMaxRetries());
@@ -36,7 +36,7 @@ class RequestedLivenessCheckConfigTest extends TestCase
      */
     public function shouldSerializeToJsonCorrectly()
     {
-        $result = new RequestedLivenessConfig(self::SOME_LIVENESS_TYPE, self::SOME_MAX_RETRIES);
+        $result = new SandboxLivenessConfig(self::SOME_LIVENESS_TYPE, self::SOME_MAX_RETRIES);
 
         $expected = [
             'liveness_type' => self::SOME_LIVENESS_TYPE,

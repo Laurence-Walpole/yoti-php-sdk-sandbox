@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yoti\DocScan\Session\Create\Check;
+namespace Yoti\Sandbox\DocScan\Request\Check;
 
 use stdClass;
 
-class RequestedLivenessConfig implements RequestedCheckConfigInterface
+class SandboxLivenessConfig implements SandboxCheckConfigInterface
 {
     /**
      * @var string
